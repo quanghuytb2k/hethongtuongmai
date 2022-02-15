@@ -1,6 +1,22 @@
-@extends('layouts.admin')
-@section('content')
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/solid.min.css">
+
+    <link rel="stylesheet" href="{{asset('css/style.css')}} ">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+
+    <script src="https://cdn.tiny.cloud/1/03vjjkv59uvqj4oy2r733miqbkspcof5omxzn0my2lwpia7j/tinymce/4/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <title>Admintrator</title>
+</head>
+<body>
 <div id="main-content-wp" class="list-product-page">
     <div class="wrap clearfix">
         <div id="content-detail" class="detail-exhibition">
@@ -31,7 +47,7 @@
                         @csrf
                         <li>
                             <h3 class="title">Tình trạng đơn hàng</h3>
-                            <select name="status" class="form-control" disabled>
+                            <select name="status" class="form-control">
                                 <option  value='Đang xử lý' @if($order->status =='Đang xử lý')
                                     selected='selected'
                                 @endif>Đang xử lý</option>
@@ -64,14 +80,14 @@
                                 <th class="thead-text">Tên sản phẩm</th>
                                 <th class="thead-text">Đơn giá</th>
                                 <th class="thead-text">Số lượng</th>
-                                <th class="thead-text">Số tiền</th>
+                                <th class="thead-text">Thành tiền</th>
                             </tr>
                         </thead>
                         <tbody>
                             @php
                                 $ordinal=0;
                             @endphp
-                            @foreach($order_product as $product)
+                            @foreach($orderdetails as $product)
                             @php
                                 $ordinal++;
                             @endphp
@@ -79,16 +95,18 @@
                                     <td class="thead-text">{{$ordinal}}</td>
                                     <td class="thead-text">
                                         <div class="thumb">
-                                            <img src="{{asset($product->thumbnail)}}" alt="" style="width: 70px; height: 70px;">
+                                            <img src="{{asset($product->Products->thumbnail)}}"alt="" style="width: 70px; height: 70px;">
                                         </div>
                                     </td>
-                                    <td class="thead-text">{{$product->name}}</td>
-                                    <td class="thead-text">{{number_format($product->price)}} VNĐ</td>
-                                    <td class="thead-text">{{$qty[$ordinal-1]}}</td>
-                                    <td class="thead-text">{{number_format($product->price*$qty[$ordinal-1])}} VNĐ</td>
+                                   
+                                    <td class="thead-text">{{$product->Products->name}}</td>
+                                    <td class="thead-text">{{number_format($product->Products->price)}} VNĐ</td>
+                                    <td class="thead-text">{{$product->qty}}</td>
+                                    {{-- <td class="thead-text">{{number_format($product->Products->price *$order->soluong])}} VNĐ</td> --}}
                                 </tr>
                             @endforeach
                         </tbody>
+                        
                     </table>
                 </div>
             </div>
@@ -96,43 +114,18 @@
                 <h3 class="section-title">Giá trị đơn hàng</h3>
                 <div class="section-detail">
                     <ul class="list-item clearfix">
-                        <table border="1">
-                        <tr>
-                        <td>
-                            <span class="total-fee">Tổng số lượng</span></td>
-                            <td><span class="total">Tổng đơn hàng</span></td>
-                            @if(isset($coupon))
-                            <td>Mã sản phẩm</td>
-                            <td>Số tiền được khuyến mãi là</td>
-                            <td>Tổng tiền sau khi khuyến mại là</td>
-                            @endif
-                        </tr>
-                        <tr>
-                            <td><span class="total-fee">{{$order->soluong}} sản phẩm</span></td>
-                            <td> <span class="total">{{number_format($order->giatri)}} VNĐ</span></td>
-                            @if(isset($coupon))
-                            <td>{{$coupon->code}}</td>
-                            @if($coupon->condition==1)
-                            @php
-                                $total_coupon = $order->giatri*$coupon->feature/100;
-                            @endphp
-                            <td>{{number_format($order->giatri*$coupon->feature/100)}}</td>
-                            <td>{{number_format($order->giatri-$total_coupon)}}</td>
-                            @endif
-                            @if($coupon->condition==2)
-                            @php
-                                
-                            @endphp
-                                <td>{{number_format($coupon->feature)}}</td>
-                                <td>{{number_format($order->giatri-$coupon->feature)}}</td>
-                            @endif
-                            @endif
-                        </tr>
-                        </table>
+                        <li>
+                            <span class="total-fee">Tổng số lượng</span>
+                            <span class="total">Tổng đơn hàng</span>
+                        </li>
+                        <li>
+                            <span class="total-fee">{{$order->soluong}} sản phẩm</span>
+                            <span class="total">{{number_format($order->giatri)}} VNĐ</span>
+                        </li>
                     </ul>
                 </div>
             </div>
         </div>
     </div>
 </div>
-@endsection
+<body>

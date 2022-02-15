@@ -71,6 +71,14 @@ Route::post('num_order','CheckoutController@num_order')->name('num_order');
 //admin order
 Route::get('admin_order/{id}','AdminOderController@admin_order')->name('admin_order');
 
+Route::resource('coupon','CouponController');
+
+// coupon
+Route::post('check-coupon', 'CouponController@checkCoupon')->name('check/coupon');
+Route::get('delete-coupon', 'CouponController@delete')->name('delete/coupon');
+
+//update_order
+Route::post('update_admin_order/{id}','AdminOderController@update_order')->name('update_order');
 Route::group(['prefix' => 'laravel-filemanager'], function () {
     \UniSharp\LaravelFilemanager\Lfm::routes();
 });

@@ -8,9 +8,13 @@ class Checkout extends Model
 {
     //
     
-    protected $fillable =['name','email','addres','phonenumber','product','soluong','payment','giatri','status','code'];
+    protected $fillable =['name','email','addres','phonenumber','product','soluong','payment','giatri','status','code','coupon_id'];
     function products(){
         return $this->belongsToMany('App\Product');
+    }
+
+    function coupons(){
+        return $this->belongsTo('App\Coupon','coupon_id','id');
     }
     
 }

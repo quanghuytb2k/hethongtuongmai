@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Bill;
+use App\Coupon;
 use App\Customer;
 use App\Product;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Session;
 use Illuminate\Http\Request;
 
 
 class CartController extends Controller
 {
     function show(){
-        return view('cart.show');
+        $coupon = Coupon::all()->first();
+        return view('cart.show', compact('coupon'));
     }
     function add(Request $request, $id){
         $products = Product::find($id);
@@ -36,6 +39,10 @@ class CartController extends Controller
         return redirect('cart/show');
     }
     function destroy(){
+        $coupon = Session::get('coupon');
+        if($coupon == true){
+            Session::forget('coupon');
+        }
         Cart::destroy();
         return redirect('cart/show');
     }

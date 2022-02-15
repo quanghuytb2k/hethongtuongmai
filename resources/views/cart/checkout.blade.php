@@ -138,10 +138,58 @@
                     @endforeach
                     <tfoot>
                         <tr class="order-total">
+                            
                             <td>Tổng đơn hàng:</td>
+                            @if(Session::get('coupon')==false)
                             <td><strong class="total-price" name="giatri">{{Cart::total()}}đ</strong></td>
+                            @endif
                         </tr>
                     </tfoot>
+                    <td>
+                        @if(Session::get('coupon'))
+                        @php
+                            $array = [];
+                            $coupon_session = Session::get('coupon');
+                            $array = [
+                                $coupon_session ,
+                            ];
+                        @endphp
+                        @foreach($array as $key => $value)
+                            @if($value['coupon_condition']==1)
+                                <input type="hidden" name="coupon_id" value="{{$value['coupon_id']}}">
+                                <div>
+                                    <p id="total-price"> Mã giảm : <span class=''> {{$value['coupon_feature']}} %</span></p>
+                                </div>
+                                @php
+                                    $total = str_replace('.','',Cart::total());
+                                    $total_coupon = ($total*$value['coupon_feature'])/100;
+                                    echo '<div class="">
+                                            <p id="total-price" class="">Tổng giảm là : <span>' .number_format($total_coupon,0,',','.').'đ</span></p>
+                                            </div>';
+                                @endphp
+                                <div class="">
+                                    <p id="total-price" class="">Tổng giá tiền sau khi giảm là: <span class=''>{{number_format($total-$total_coupon,0,',','.')}}đ</span></p>
+                                </div>
+                            @endif
+                            @if($value['coupon_condition']==2)
+                                <input type="hidden" name="coupon_id" value="{{$value['coupon_id']}}">
+                                <div class="">
+                                    <p id="total-price" class=""> Mã giảm : <span class=''> {{$value['coupon_feature']}} k</span></p>
+                                </div>
+                                @php
+                                    $total = str_replace('.','',Cart::total());
+                                    $total_coupon = $total-$value['coupon_feature'];
+                                    echo '<div >
+                                            <p id="total-price" class="">Tổng giảm là : <span>' .number_format($value['coupon_feature'],0,',','.').'đ</span></p>
+                                            </div>';
+                                @endphp
+                                <div class="">
+                                    <p id="total-price" class="">Tổng giá tiền sau khi giảm là: <span class=''>{{number_format($total_coupon,0,',','.')}}đ</span></p>
+                                </div>
+                            @endif
+                        @endforeach
+                        @endif
+                        </td>
                 </table>
                 <div id="payment-checkout-wp">
                     <ul id="payment_methods">

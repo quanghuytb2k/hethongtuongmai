@@ -10,9 +10,13 @@ use Illuminate\Http\Request;
 use App\Province;
 use App\District;
 use App\Commune;
+use App\Product;
 use App\Order_product;
+use App\Checkout_product;
 use Illuminate\Support\Facades\DB;
-
+use App\Mail\SendMail;
+use Session;
+use Mail;
 class CheckoutController extends Controller
 {
     //
@@ -20,7 +24,29 @@ class CheckoutController extends Controller
         $provinces = Province::all();
             $districts = District::all();
             $communes = Commune::all();
-        return view('cart.checkout',compact('provinces','districts','communes'));
+            $coupon = Session::get('coupon');
+            $array = [];
+            $total_amount = 0;
+            if(!empty(Session::get('coupon'))){
+                $coupon_session = Session::get('coupon');
+            $array = [
+                $coupon_session ,
+            ];
+            // dd($array);
+            foreach($array as $key=>$item){
+                if($item['coupon_condition'] == 1){
+                    $total = str_replace('.','',Cart::total());
+                    $total_coupon = $total*$item['coupon_feature']/100;
+                    $total_amount = $total-$total_coupon; 
+                }
+                if($item['coupon_condition'] == 2){
+                    $total = str_replace('.','',Cart::total());
+                    $total_coupon = $item['coupon_feature'];
+                    $total_amount = $total-$total_coupon; 
+                }
+            }
+            }
+        return view('cart.checkout',compact('provinces','districts','communes','total_amount'));
     }
     function checkout_action(Request $request){
         $request->validate([
@@ -41,8 +67,7 @@ class CheckoutController extends Controller
             ]
 
             );
-            
-            Checkout::create([
+            $order = Checkout::create([
                 'code'=> 'DT'.time(),
                 'name' => $request->input('name'),
                 'email' => $request->input('email'),
@@ -53,15 +78,22 @@ class CheckoutController extends Controller
                 'payment'=>$request->input('payment'),
                 'giatri'=>Cart::total(0,0,''),
                 'status'=>'đang sử lý',
+                'coupon_id'=>$request->input('coupon_id'),
             ]);
+            $coupon = Session::get('coupon');
+            if($coupon == true){
+                Session::forget('coupon');
+            }
+            $orderdetails= [];
             $order_id = Checkout::max('id');
-            foreach (Cart::content() as $item){
-                DB::table('checkout_product')->insert([
+            foreach (Cart::content() as $key=>$item){
+               $orderdetails[$key] = Checkout_product::create([
                     'checkout_id'=> $order_id ,
                     'product_id'=> $item->id,
                     'qty'=> $item->qty ,
                 ]);
             }
+            Mail::to($order->email)->send(new SendMail($order,$orderdetails));
                 Cart::destroy();
             return redirect('cart/checkout')->with('status','đã mua sản phẩm  thành công');
     }

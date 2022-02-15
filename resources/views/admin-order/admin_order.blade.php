@@ -7,7 +7,7 @@
             Cập nhật đơn hàng
         </div>
         <div class="card-body">
-            <form action='' method="POST" files = true enctype="multipart/form-data">
+            <form action='{{route('update_order',$order->id)}} ' method="POST" files = true enctype="multipart/form-data">
                 @csrf
                 <div class="row">
                     <div class="col-6">
@@ -58,31 +58,22 @@
                                 <small class="text-danger">{{$message}}</small>
                             @enderror
                         </div>
-
-                        <div class="form-group">
-                            <label for="giatri">Giá trị</label>
-                            <input class="form-control" type="text" name="giatri" id="giatri" value="{{$order->giatri}}" readonly="readonly">
-                            @error('giatri')
-                                <small class="text-danger">{{$message}}</small>
-                            @enderror
-                        </div>
-
                         <div class="form-group">
                             <label for="">Trạng thái</label>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="status" id="status1" value="Đang xử lý" @if($order->status=='Đang xử lý')
+                                <input class="form-check-input" type="radio" name="status" id="status1" value="đang xử lý" @if($order->status=='đang sử lý')
                                 checked
                             @endif
-                             @if(old('status') =='Đang xử lý') checked @endif>
+                             @if(old('status') =='đang sử lý') checked @endif>
                                 <label class="form-check-label" for="status1">
-                                    Đang xử lý
+                                    Đang sử lý
                                 </label>
                             </div>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="status" id="status2" value="Đang vận chuyển" @if($order->status=='Đang vận chuyển')
+                                <input class="form-check-input" type="radio" name="status" id="status2" value="đang vận chuyển" @if($order->status=='đang vận chuyển')
                                 checked
                             @endif
-                             @if(old('status')== 'Đang vận chuyển') checked @endif>
+                             @if(old('status')== 'đang vận chuyển') checked @endif>
                                 <label class="form-check-label" for="status2">
                                     Đang vận chuyển
                                 </label>

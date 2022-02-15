@@ -171,6 +171,20 @@
                             <li><a href="{{route('admin/user/list-user')}} ">Danh sách</a></li>
                         </ul>
                     </li>
+                    <li class="nav-link">
+                        <a href="{{route('coupon.index')}} " >
+                            <div class="nav-link-icon d-inline-flex">
+                                <i class="far fa-folder"></i>
+                            </div>
+                            Khuyễn mãi
+                        </a>
+                        <i class="arrow fas fa-angle-right"></i>
+
+                        <ul class="sub-menu">
+                            <li class=" {{$module_active =='user'?'active':''}}"><a href="{{route('coupon.create')}} ">Thêm mới</a></li>
+                            <li><a href="{{route('coupon.index')}} ">Danh sách</a></li>
+                        </ul>
+                    </li>
 
                     <!-- <li class="nav-link"><a>Bài viết</a>
                         <ul class="sub-menu">

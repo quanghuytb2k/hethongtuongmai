@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\DB;
 use App\Checkout;
+use App\Coupon;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
@@ -30,8 +31,8 @@ class DashboardController extends Controller
             $qty[]=$item->qty;
     
         }
-
-        return view('admin.detail',compact('order' , 'order_product','qty'));
+        $coupon = Checkout::find($id)->coupons;
+        return view('admin.detail',compact('order' , 'order_product','qty','coupon'));
     }
     function update_dashboard(Request $request, $id){
         Checkout::where('id',$id)->update([
