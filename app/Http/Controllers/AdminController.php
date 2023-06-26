@@ -133,4 +133,9 @@ class AdminController extends Controller
             return redirect('admin/user/list-user')->with('status','đã sửa bản ghi thành công');
 
     }
+
+    function test(){
+        $a = 1;
+        $b =2;
+    }
 }
