@@ -147,10 +147,9 @@ class AdminController extends Controller
     function test4(){
         $a = 1;
         $b =2;
-        $d =5;
+        $d =6;
     }
-
-    function test5(){
+    function test6(){
         $a = 1;
         $b =2;
         $d =7;
